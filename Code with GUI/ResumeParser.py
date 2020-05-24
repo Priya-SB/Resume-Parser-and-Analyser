@@ -26,8 +26,8 @@ def append_list_as_row(list_of_elem):
 add = []
 class Extractor():
     def __init__(self,arg1,arg2):
-        self.softskills=self.load_skills('softskills.txt')
-        self.hardskills=self.load_skills('hardskills.txt')
+        self.softskills=self.load_skills('../softskills.txt')
+        self.hardskills=self.load_skills('../hardskills.txt')
         self.jb_distribution=self.build_ngram_distribution(arg1)
         self.cv_distribution=self.build_ngram_distribution(arg2)
         self.table=[]
