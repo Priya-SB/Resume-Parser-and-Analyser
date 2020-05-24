@@ -6,10 +6,14 @@ import nltk
 import operator
 import math
 import csv
-
-
 from csv import writer
 
+def next_path(path_pattern):
+
+    i = 1
+    while os.path.exists(path_pattern % i):
+        i += 1
+    return path_pattern % i
 
 def append_list_as_row(list_of_elem):
     # Open file in append mode
@@ -27,7 +31,7 @@ class Extractor():
         self.jb_distribution=self.build_ngram_distribution(arg1)
         self.cv_distribution=self.build_ngram_distribution(arg2)
         self.table=[]
-        self.outFile="Extracted_keywords.csv"
+        self.outFile=next_path('Extracted_data-%s.csv')
         add.append(arg2)
         
     def load_skills(self,filename):
@@ -46,7 +50,6 @@ class Extractor():
         for n in n_s:
             dist.update(self.parse_file(filename,n))
         return dist
-        
         
     def parse_file(self,filename,n):
         f=open(filename,'r')
@@ -67,7 +70,6 @@ class Extractor():
         return re.sub(r'[^\w\s]','',line.replace('\n','').replace('\t','').lower())		
         
         
-        
     def ngrams(self,input_list, n):
         return list(zip(*[input_list[i:] for i in range(n)]))
         
@@ -86,8 +88,6 @@ class Extractor():
             sumyy += y*y
             sumxy += x*y
         return sumxy/math.sqrt(sumxx*sumyy)
-     
-        
         
     def sendToFile(self):
         try:
@@ -176,8 +176,7 @@ def main(arg1,arg2):
     K.makeTable()
     K.sendToFile()
     K.printMeasures()
-
-
+    
 
 if __name__ == "__main__":
     main()
