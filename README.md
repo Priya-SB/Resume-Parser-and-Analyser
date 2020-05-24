@@ -6,3 +6,6 @@ Username - indira <br>
 Password - test123 <br>
 for company view
 
+-----------------
+Download Input files :- hardskills.txt, softskills.txt <br>
+and test on the 3 different resumes and 1 jd in sample input folder.
