@@ -6,6 +6,10 @@ import nltk
 import operator
 import math
 import csv
+import MySQLdb as mdb
+conn=mdb.connect('localhost','user','password','Career')
+cur=conn.cursor()
+
 from csv import writer
 
 def next_path(path_pattern):
@@ -15,24 +19,23 @@ def next_path(path_pattern):
         i += 1
     return path_pattern % i
 
-def append_list_as_row(list_of_elem):
-    # Open file in append mode
-    with open('similarities.csv', 'a+', newline='') as write_obj:
-        # Create a writer object from csv module
-        csv_writer = writer(write_obj)
-        # Add contents of list as last row in the csv file
-        csv_writer.writerow(list_of_elem)
+def write_database(list):
+    cur.execute("INSERT into fit(candidate,job,score,hardskill,softskill,general) VALUES('%s','%s','%s','%s','%s','%s')"%(list[0],list[1],list[2],list[3],list[4],list[5]))
+    conn.commit()
 
 add = []
 class Extractor():
-    def __init__(self,arg1,arg2):
-        self.softskills=self.load_skills('../softskills.txt')
-        self.hardskills=self.load_skills('../hardskills.txt')
-        self.jb_distribution=self.build_ngram_distribution(arg1)
-        self.cv_distribution=self.build_ngram_distribution(arg2)
+    def __init__(self,job_id,candidate_id,jd_name,resume_name):
+        self.softskills=self.load_skills('softskills.txt')
+        self.hardskills=self.load_skills('hardskills.txt')
+        self.jb_distribution=self.build_ngram_distribution(jd_name)
+        self.cv_distribution=self.build_ngram_distribution(resume_name)
         self.table=[]
         self.outFile=next_path('Extracted_data-%s.csv')
-        add.append(arg2)
+        add.append(candidate_id)
+        add.append(job_id)
+        
+
         
     def load_skills(self,filename):
         f=open(filename,'r')
@@ -50,6 +53,7 @@ class Extractor():
         for n in n_s:
             dist.update(self.parse_file(filename,n))
         return dist
+        
         
     def parse_file(self,filename,n):
         f=open(filename,'r')
@@ -70,6 +74,7 @@ class Extractor():
         return re.sub(r'[^\w\s]','',line.replace('\n','').replace('\t','').lower())		
         
         
+        
     def ngrams(self,input_list, n):
         return list(zip(*[input_list[i:] for i in range(n)]))
         
@@ -88,6 +93,8 @@ class Extractor():
             sumyy += y*y
             sumxy += x*y
         return sumxy/math.sqrt(sumxx*sumyy)
+     
+        
         
     def sendToFile(self):
         try:
@@ -102,20 +109,22 @@ class Extractor():
         n_rows=len(self.table)		
         v1=[self.table[m1][4] for m1 in range(n_rows)]
         v2=[self.table[m2][5] for m2 in range(n_rows)]
-        print("Measure 1: ",str(sum(v1)))
-        print("Measure 2: ",str(sum(v2)))      		
+        #print("Measure 1: ",str(sum(v1)))
+        #print("Measure 2: ",str(sum(v2)))      		
         v1=[self.table[jb][2] for jb in range(n_rows)]
         v2=[self.table[cv][3] for cv in range(n_rows)]
-        print("Measure 3 (cosine sim): ",str(self.measure3(v1,v2)))
+        #print("Measure 3 (cosine sim): ",str(self.measure3(v1,v2)))
+        add.append(self.measure3(v1,v2))
         for type in ['hard','soft','general']:
             v1=[self.table[jb][2] for jb in range(n_rows) if self.table[jb][0]==type]
             v2=[self.table[cv][3] for cv in range(n_rows) if self.table[cv][0]==type]
-            print("Cosine similarity for "+type+" skills: "+str(self.measure3(v1,v2)))
-            print(str(self.measure3(v1,v2)))
+            #print("Cosine similarity for "+type+" skills: "+str(self.measure3(v1,v2)))
+            #print(str(self.measure3(v1,v2)))
             #print(int(str(self.measure3(v1,v2))))
-            add.append(str(self.measure3(v1,v2)))
-            print(add)
-        append_list_as_row(add)
+            add.append(self.measure3(v1,v2))
+            #print(add)
+        #append_list_as_row(add)
+        write_database(add)
         add.clear()
         
             
@@ -171,12 +180,13 @@ class Extractor():
         self.table=tmp_table
 
 
-def main(arg1,arg2):
-    K=Extractor(arg1,arg2)
+def main(job_id,candidate_id,jd_name,resume_name):
+    K=Extractor(job_id,candidate_id,jd_name,resume_name)
     K.makeTable()
     K.sendToFile()
     K.printMeasures()
-    
+
+
 
 if __name__ == "__main__":
     main()
