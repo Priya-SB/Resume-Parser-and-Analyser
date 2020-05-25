@@ -33,7 +33,7 @@ Computer Engineering Corporation, Los Angeles, CA, 1993-Present
 
 * Designed and managed the development of an enterprise-level client/server automated auditing application for a major financial management company migrating from mainframe computers, db2, and FOCUS to a workgroup oriented, client/server architecture involving Windows for Workgroups, Windows NT Advanced Server, Microsoft SQL Server, Oracle7, and UNIX.
 
-* Designed an enterprise level, high performance, mission-critical, client/server database system incorporating symmetric multiprocessing computers (SMP), Oracle7’s Parallel Server, Tuxedo’s on-line transaction processing (OLTP) monitor, and redundant array of inexpensive disks (RAID) technology.
+* Designed an enterprise level, high performance, mission-critical, client/server database system incorporating symmetric multiprocessing computers (SMP), Oracle7â€™s Parallel Server, Tuxedoâ€™s on-line transaction processing (OLTP) monitor, and redundant array of inexpensive disks (RAID) technology.
 
 * Conducted extensive trade studies of a large number of vendors that offer leading-edge technologies; these studies identified proven (low-risk) implementations of SMP and RDBMS systems that met stringent performance and availability criteria.
 
@@ -41,7 +41,7 @@ Systems Analyst
 
 Business Consultants, Inc., Washington, DC 1990-1993
 
-* Provided technical consulting services to the Smithsonian Institute’s Information Technology Services Group, Amnesty International, and internal research and development initiatives.
+* Provided technical consulting services to the Smithsonian Instituteâ€™s Information Technology Services Group, Amnesty International, and internal research and development initiatives.
 
 * Consolidated and documented the Smithsonian Laboratory's Testing, Demonstration, and Training databases onto a single server, maximizing the use of the laboratory's computing resources.
 
