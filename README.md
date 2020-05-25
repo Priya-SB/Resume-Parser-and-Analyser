@@ -1,21 +1,32 @@
 # Resume-Parser-and-Analyser
-Code with GUI folder contains everything <br>
-For latest code, run start.py <br>
-Log In - <br>
-Username - indira <br>
-Password - test123 <br>
-for company view
 
------------------
-Download Input files :- hardskills.txt, softskills.txt <br>
-and test on the 3 different resumes and 1 jd in sample input folder.
+---------------------------------
+Directions:
 
-----------------
-Candidate View and Company View Frames added along with all the database connectivity.
+1) Clone Repository
+2) Install & download NLTK
+3) Basic parsing code ResumeParser_Original.py <br>
+-> softskill.txt, hardskill.txt should be in same folder as code <br>
+-> Command Line Inputs JobDesc.txt and Resume.txt (examples in sample inputs) <br>
+-> Outputs Extracted_keywords.csv and similarity index on terminal/command prompt
+4) For GUI version
+-> Run .sql file in Code with GUI folder <br>
+-> Keep folder contents intact <br>
+-> Run start.py (signup, login, add job, add resumes, graphical visualization of result, etc) <br>
 
-Download and import the database to MySQL.
-Download the branch code.
-Start using it like a normal application by signing up and uploading resumes. You don't have to explicitly call the parser function. It'll be called once at the beginning or at any upload.
-For ease of maintenance I've created three sub-folders in the root folder namely Jds, Resumes, Extracted where all jds, resumes and extracted kyword files will be stored so make sure you're uploading from that file.
+---------------------------------
+GUI and Output
+---------------------------------
+![login](https://github.com/Priya-SB/Resume-Parser-and-Analyser/blob/master/GUI_images/login.png)
+![signup](https://github.com/Priya-SB/Resume-Parser-and-Analyser/blob/master/GUI_images/signup.png)
+![regisnotif](https://github.com/Priya-SB/Resume-Parser-and-Analyser/blob/master/GUI_images/regisnotif.png)
+![candhome](https://github.com/Priya-SB/Resume-Parser-and-Analyser/blob/master/GUI_images/candhome.png)
+![cvnotif](https://github.com/Priya-SB/Resume-Parser-and-Analyser/blob/master/GUI_images/cvnotif.png)
+![companyhome](https://github.com/Priya-SB/Resume-Parser-and-Analyser/blob/master/GUI_images/companyhome.png)
+![addjd](https://github.com/Priya-SB/Resume-Parser-and-Analyser/blob/master/GUI_images/addjd.png)
+![jdnotif](https://github.com/Priya-SB/Resume-Parser-and-Analyser/blob/master/GUI_images/jdnotif.png)
+![graphview](https://github.com/Priya-SB/Resume-Parser-and-Analyser/blob/master/GUI_images/graphview.png)
+![plot](https://github.com/Priya-SB/Resume-Parser-and-Analyser/blob/master/GUI_images/plot.png)
+![database](https://github.com/Priya-SB/Resume-Parser-and-Analyser/blob/master/GUI_images/database.png)
 
-Apart from this I couldn't figure out how to display the output in GUI so for the time being it prints on terminal.
+----------------------------------
