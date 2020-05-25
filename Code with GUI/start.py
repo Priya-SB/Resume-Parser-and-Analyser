@@ -12,6 +12,10 @@ LARGE_FONT= ("Verdana", 12)
 import tkinter as tk
 from tkinter import filedialog
 import ResumeParser
+import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+        
 
 resumes = []
 jd = []
@@ -29,7 +33,7 @@ class Control(tk.Tk):
 
         self.frames = {}
 
-        for F in (LogIn, SignUp, CompanyView):
+        for F in (LogIn, SignUp, CompanyView,GraphView):
 
             frame = F(container, self)
 
@@ -49,32 +53,32 @@ class LogIn(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self,parent)
         label = tk.Label(self, text="Log In ", font=LARGE_FONT)
-        label.pack(pady=10,padx=10)
+        label.grid(row=1,column=3)
         
         n = tk.Label(self ,text = "First Name")
-        n.pack()
+        n.grid(row=3,column =2 )
         name = tk.Entry(self)
-        name.pack()
+        name.grid(row=3,column=3)
         pswrd = tk.Label(self ,text = "Password")
-        pswrd.pack()
+        pswrd.grid(row=5,column=2)
         
         password = tk.Entry(self)
-        password.pack()
+        password.grid(row=5,column=3)
         
         v = tk.StringVar() 
         
         r1 = tk.Radiobutton(self, text='Company', variable=v, value="company") 
         r2 = tk.Radiobutton(self, text='Candidate', variable=v, value="candidate")
-        r1.pack()
-        r2.pack()
+        r1.grid(row=7,column=3)
+        r2.grid(row=8,column=3)
         login_b = tk.Button(self, text="Log In",
                             command=lambda: self.login(name.get(),password.get(),v.get(),controller))
-        login_b.pack()
+        login_b.grid(row=10,column=2)
         button = tk.Button(self, text="Sign Up",
                             command=lambda: controller.show_frame(SignUp))
-        button.pack()
+        button.grid(row=10,column=4)
     def login(self,name,password,v,controller):
-        
+        print(name,password) 
         if (name == "indira" and password == "test123"):
             controller.show_frame(CompanyView)
         else:
@@ -87,30 +91,30 @@ class SignUp(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         label = tk.Label(self, text="Sign Up", font=LARGE_FONT)
-        label.pack(pady=10,padx=10)
+        label.grid(row=1,column=3)
 
         n = tk.Label(self ,text = "First Name")
-        n.pack()
+        n.grid(row=2,column=1)
         name = tk.Entry(self)
-        name.pack()
+        name.grid(row=2,column=3)
         pswrd = tk.Label(self ,text = "Password")
-        pswrd.pack()
+        pswrd.grid(row=4,column=1)
         password = tk.Entry(self)
-        password.pack()
+        password.grid(row=4,column=3)
         
         v = tk.StringVar() 
         
         r1 = tk.Radiobutton(self, text='Company', variable=v, value="company") 
         r2 = tk.Radiobutton(self, text='Candidate', variable=v, value="candidate")
-        r1.pack()
-        r2.pack()
+        r1.grid(row=6,column=1)
+        r2.grid(row=6,column=3)
         
         signup_b = tk.Button(self, text="Sign Up",
                             command=lambda: self.signup(name.get(),password.get(),v.get()))
-        signup_b.pack()
+        signup_b.grid(row=8,column=2)
         button1 = tk.Button(self, text="Back to Log In",
                             command=lambda: controller.show_frame(LogIn))
-        button1.pack()
+        button1.grid(row=9,column=2)
 
         #button2 = tk.Button(self, text="Page Two",
                            # command=lambda: controller.show_frame(PageTwo))
@@ -123,29 +127,29 @@ class CompanyView(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         label = tk.Label(self, text="CV Analysis", font=LARGE_FONT)
-        label.pack(pady=10,padx=10)
+        label.grid(row=0,column=2)
 
         #self.geometry("500x300+900+300")
         
         button = tk.Button(self, text='Stop', width=25, command=self.destroy) 
-        button.pack()        
+        button.grid(row=1,column=2)
         
         res_b = tk.Button(self, text='Upload Resumes', width=25, command = self.open_file) 
-        res_b.pack()
+        res_b.grid(row=3,column=2)
          
         jd_b = tk.Button(self, text='Upload JD', width=25, command = self.open_jd) 
-        jd_b.pack()
+        jd_b.grid(row=4,column=2)
         
         call = tk.Button(self, text='Parse', width=25, command = self.call_parser) 
-        call.pack()
+        call.grid(row=5,column=2)
         
         button1 = tk.Button(self, text="Back to Home",
                             command=lambda: controller.show_frame(LogIn))
-        button1.pack()
+        button1.grid(row=6,column=2)
 
-        button2 = tk.Button(self, text="Page One",
-                            command=lambda: controller.show_frame(SignUp))
-        button2.pack()
+        button2 = tk.Button(self, text="Show Graph",
+                            command=lambda: controller.show_frame(GraphView))
+        button2.grid(row=7,column=2)
         
     
     def open_file(self):
@@ -165,9 +169,36 @@ class CompanyView(tk.Frame):
         for i in resumes:
             r = str(i)
             ResumeParser.main(j,r)
+
+class GraphView(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        label = tk.Label(self, text="Graph of Resume Similarities", font=LARGE_FONT)
+        label.grid(row=1, column = 2)
+        button1 = tk.Button(self, text="Back", command=lambda: controller.show_frame(CompanyView))
+        button1.grid(row=10,column = 2)
+        button1 = tk.Button(self, text="Plot", command=self.plot_gr)
+        button1.grid(row=9,column = 2)
         
+        
+    def plot_gr(self):
+        data = pd.read_csv("similarities.csv")
+        df1 = pd.DataFrame(data)
+        short = []
+        long = list(data.filename)
+        for i in long:
+            i = i.split("/")
+            short.append(i[-1])
+        df1.insert(1,"short_file",short)
+        figure1 = plt.Figure(figsize=(7,7), dpi=100)
+        ax1 = figure1.add_subplot(111)
+        bar1 = FigureCanvasTkAgg(figure1, self)
+        bar1.get_tk_widget().grid(row = 4, column = 3)
+        df1.plot(x='short_file', y='hardskill', kind='bar',legend=True,ax=ax1)
+        ax1.set_title('Resumes')
+	
 
 app = Control()
 app.title('Resume Picker') 
-app.geometry("500x300+900+300")
+#app.geometry("300x120+900+300")
 app.mainloop()
