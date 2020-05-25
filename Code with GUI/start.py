@@ -65,19 +65,13 @@ class LogIn(tk.Frame):
         password = tk.Entry(self)
         password.grid(row=5,column=3)
         
-        v = tk.StringVar() 
-        
-        r1 = tk.Radiobutton(self, text='Company', variable=v, value="company") 
-        r2 = tk.Radiobutton(self, text='Candidate', variable=v, value="candidate")
-        r1.grid(row=7,column=3)
-        r2.grid(row=8,column=3)
         login_b = tk.Button(self, text="Log In",
-                            command=lambda: self.login(name.get(),password.get(),v.get(),controller))
+                            command=lambda: self.login(name.get(),password.get(),controller))
         login_b.grid(row=10,column=2)
         button = tk.Button(self, text="Sign Up",
                             command=lambda: controller.show_frame(SignUp))
         button.grid(row=10,column=4)
-    def login(self,name,password,v,controller):
+    def login(self,name,password,controller):
         print(name,password) 
         if (name == "indira" and password == "test123"):
             controller.show_frame(CompanyView)
@@ -102,15 +96,8 @@ class SignUp(tk.Frame):
         password = tk.Entry(self)
         password.grid(row=4,column=3)
         
-        v = tk.StringVar() 
-        
-        r1 = tk.Radiobutton(self, text='Company', variable=v, value="company") 
-        r2 = tk.Radiobutton(self, text='Candidate', variable=v, value="candidate")
-        r1.grid(row=6,column=1)
-        r2.grid(row=6,column=3)
-        
         signup_b = tk.Button(self, text="Sign Up",
-                            command=lambda: self.signup(name.get(),password.get(),v.get()))
+                            command=lambda: self.signup(name.get(),password.get()))
         signup_b.grid(row=8,column=2)
         button1 = tk.Button(self, text="Back to Log In",
                             command=lambda: controller.show_frame(LogIn))
@@ -119,8 +106,8 @@ class SignUp(tk.Frame):
         #button2 = tk.Button(self, text="Page Two",
                            # command=lambda: controller.show_frame(PageTwo))
         #button2.pack()
-    def signup(self,name,password,type_v):
-        print(name,password,type_v)
+    def signup(self,name,password):
+        print(name,password)
 
 
 class CompanyView(tk.Frame):
@@ -169,6 +156,7 @@ class CompanyView(tk.Frame):
         for i in resumes:
             r = str(i)
             ResumeParser.main(j,r)
+        resumes.clear()
 
 class GraphView(tk.Frame):
     def __init__(self, parent, controller):
@@ -185,16 +173,27 @@ class GraphView(tk.Frame):
         data = pd.read_csv("similarities.csv")
         df1 = pd.DataFrame(data)
         short = []
+        sum_ = []
         long = list(data.filename)
         for i in long:
             i = i.split("/")
             short.append(i[-1])
+        leng = len(data)
         df1.insert(1,"short_file",short)
+        for k in range(leng):
+            sum_.append((df1.hardskill[k] + df1.softskill[k] + df1.general[k])/3)
+        df1.insert(2,"Average", sum_) 
         figure1 = plt.Figure(figsize=(7,7), dpi=100)
-        ax1 = figure1.add_subplot(111)
+        ax1 = figure1.add_subplot(221)
+        ax2 = figure1.add_subplot(222)
+        ax3 = figure1.add_subplot(223)
+        ax4 = figure1.add_subplot(224)
         bar1 = FigureCanvasTkAgg(figure1, self)
         bar1.get_tk_widget().grid(row = 4, column = 3)
         df1.plot(x='short_file', y='hardskill', kind='bar',legend=True,ax=ax1)
+        df1.plot(x='short_file', y='softskill', kind='bar',legend=True,ax=ax2)
+        df1.plot(x='short_file', y='general', kind='bar',legend=True,ax=ax3)
+        df1.plot(x='short_file', y='Average', kind='bar',legend=True,ax=ax4)
         ax1.set_title('Resumes')
 	
 
