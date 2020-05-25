@@ -7,10 +7,18 @@ import operator
 import math
 import csv
 import MySQLdb as mdb
-conn=mdb.connect('localhost','user','password','Career')
+conn=mdb.connect('localhost','root','priya1512','Career')
 cur=conn.cursor()
 
 from csv import writer
+
+def append_list_as_row(list_of_elem):
+    # Open file in append mode
+    with open('similarities.csv', 'a+', newline='') as write_obj:
+        # Create a writer object from csv module
+        csv_writer = writer(write_obj)
+        # Add contents of list as last row in the csv file
+        csv_writer.writerow(list_of_elem)
 
 def next_path(path_pattern):
 
@@ -31,7 +39,7 @@ class Extractor():
         self.jb_distribution=self.build_ngram_distribution(jd_name)
         self.cv_distribution=self.build_ngram_distribution(resume_name)
         self.table=[]
-        self.outFile=next_path('Extracted_data-%s.csv')
+        self.outFile=next_path('EE_Resume-%s.csv')
         add.append(candidate_id)
         add.append(job_id)
         
@@ -123,7 +131,7 @@ class Extractor():
             #print(int(str(self.measure3(v1,v2))))
             add.append(self.measure3(v1,v2))
             #print(add)
-        #append_list_as_row(add)
+        append_list_as_row(add)
         write_database(add)
         add.clear()
         
